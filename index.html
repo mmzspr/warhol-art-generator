@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhol Art Generator</title>
+    <script src="rgbquant.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    <h1>Warhol Art Generator</h1>
+    <label for="colorCount">Number of Colors: </label>
+    <input type="number" id="colorCount" min="1" value="5"><br>
+
+    <label>Size: </label>
+    <input type="number" id="xLength" placeholder="X Length" value="5" style="width: 50px;">
+    <span> x </span>
+    <input type="number" id="yLength" placeholder="Y Length" value="2" style="width: 50px;"><br>
+
+    <input type="file" id="imageInput" accept="image/*"><br>
+
+    <button id="generateButton">Generate Art</button><br>
+
+    <canvas id="outputCanvas"></canvas>
+</body>
+</html>
