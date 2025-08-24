@@ -1,6 +1,7 @@
 window.onload = function() {
     const imageInput = document.getElementById('imageInput');
     const generateButton = document.getElementById('generateButton');
+    const canvas = document.getElementById('outputCanvas');
 
     generateButton.addEventListener('click', function() {
         const file = imageInput.files[0];
@@ -16,9 +17,22 @@ window.onload = function() {
             reader.readAsDataURL(file);
         }
     });
+
+    canvas.addEventListener('click', function() {
+        saveCanvasAsImage();
+    });
 };
 
+function saveCanvasAsImage() {
+    const canvas = document.getElementById('outputCanvas');
+    const link = document.createElement('a');
+    link.download = 'warhol_art.png';
+    link.href = canvas.toDataURL();
+    link.click();
+}
+
 function generateArt(img) {
+    const maxSize = Number(document.getElementById('maxSize').value);
     const canvas = document.getElementById('outputCanvas');
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled= false;
@@ -26,7 +40,7 @@ function generateArt(img) {
     const xLength = Number(document.getElementById('xLength').value);
     const yLength = Number(document.getElementById('yLength').value);
 
-    const newImg = resizeImage(img, 120);
+    const newImg = resizeImage(img, maxSize);
     newImg.onload = () => {
         canvas.width = newImg.width * xLength;
         canvas.height = newImg.height * yLength;
