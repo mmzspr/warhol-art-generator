@@ -9,17 +9,17 @@
 </head>
 <body>
     <h1>Warhol Art Generator</h1>
-    <label for="colorCount">Number of Colors: </label>
+    <label for="colorCount">色数: </label>
     <input type="number" id="colorCount" min="1" value="5"><br>
 
-    <label>Size: </label>
-    <input type="number" id="xLength" placeholder="X Length" value="5" style="width: 50px;">
+    <label>出力画像数: </label>
+    <input type="number" id="xLength" placeholder="X Length" value="8" style="width: 50px;">
     <span> x </span>
-    <input type="number" id="yLength" placeholder="Y Length" value="2" style="width: 50px;"><br>
+    <input type="number" id="yLength" placeholder="Y Length" value="4" style="width: 50px;"><br>
 
-    <input type="file" id="imageInput" accept="image/*"><br>
+    入力画像：<input type="file" id="imageInput" accept="image/*"><br>
 
-    <button id="generateButton">Generate Art</button><br>
+    <button id="generateButton">生成</button><br>
 
     <canvas id="outputCanvas"></canvas>
 </body>

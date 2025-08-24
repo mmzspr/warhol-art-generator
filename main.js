@@ -21,22 +21,77 @@ window.onload = function() {
 function generateArt(img) {
     const canvas = document.getElementById('outputCanvas');
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled= false;
 
     const xLength = Number(document.getElementById('xLength').value);
     const yLength = Number(document.getElementById('yLength').value);
 
-    const newImg = resizeImage(img, 100);
-    canvas.width = newImg.width * xLength;
-    canvas.height = newImg.height * yLength;
+    const newImg = resizeImage(img, 120);
+    newImg.onload = () => {
+        canvas.width = newImg.width * xLength;
+        canvas.height = newImg.height * yLength;
 
 
-    const [idxi8, pallette] = quantImg(newImg);
-    const imageData = createImageData(idxi8, ctx, newImg.width, newImg.height);
-    for (let x = 0; x < xLength; x++) {
-        for (let y = 0; y < yLength; y++) {
-            ctx.putImageData(imageData, x * newImg.width, y * newImg.height);
+        const [idxi8, pallette] = quantImg(newImg);
+        const imageData = createImageData(idxi8, ctx, newImg.width, newImg.height);
+
+        const colorList = (function (arr, n) {
+            const result = [];
+            for (let i = 0; i < arr.length; i += n) {
+                const chunk = arr.slice(i, i + n);
+                result.push(chunk);
+            }
+            return result;
+        }(pallette, 4));
+
+        for (let x = 0; x < xLength; x++) {
+            for (let y = 0; y < yLength; y++) {
+                const colorChangedImgData = changeColor(imageData, ctx, colorList, newImg.width, newImg.height);
+                ctx.putImageData(colorChangedImgData, x * newImg.width, y * newImg.height);
+            }
         }
     }
+}
+
+function changeColor(imgData, ctx, colorList, width, height) {
+    const colorChangedUint8Array = new Uint8ClampedArray(imgData.data.length);
+    
+    const randomColorList = (function (arr) {
+        const result = [];
+        for (let i = 0; i < arr.length; i++) {
+            const color = arr[i];
+            const randomColor = [
+                Math.floor(Math.random() * 256),
+                Math.floor(Math.random() * 256),
+                Math.floor(Math.random() * 256),
+                color[3]
+            ];
+            result.push(randomColor);
+        }
+        return result;
+    })(colorList);
+
+    for (let i = 0; i < imgData.data.length; i += 4) {
+        const r = imgData.data[i];
+        const g = imgData.data[i + 1];
+        const b = imgData.data[i + 2];
+        const a = imgData.data[i + 3];
+
+        // Find the closest color in the color map
+        const colorIndex = colorList.findIndex(color => colorMatches([r, g, b], color));
+        if (colorIndex !== -1) {
+            colorChangedUint8Array[i] = randomColorList[colorIndex][0];
+            colorChangedUint8Array[i + 1] = randomColorList[colorIndex][1];
+            colorChangedUint8Array[i + 2] = randomColorList[colorIndex][2];
+            colorChangedUint8Array[i + 3] = a; // Preserve alpha
+        }
+    }
+
+    return createImageData(colorChangedUint8Array, ctx, width, height);
+}
+
+function colorMatches(color1, color2) {
+    return color1[0] === color2[0] && color1[1] === color2[1] && color1[2] === color2[2];
 }
 
 function createImageData(idxi8, ctx, width, height) {
@@ -67,6 +122,7 @@ function resizeImage(img, maxLength) {
     }
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled= false;
 
     canvas.width = newWidth;
     canvas.height = newHeight;
