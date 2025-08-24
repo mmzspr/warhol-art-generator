@@ -1,3 +1,7 @@
+html {
+    font-family: "Segoe UI",Meiryo,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+}
+
 header {
     text-align: center;
     margin-bottom: 20px;
@@ -9,7 +13,7 @@ header {
 }
 
 content {
-    max-width: 400px;
+    max-width: 600px;
     width: 80%;
     text-align: left;
     display: inline-block;
