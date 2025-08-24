@@ -32,6 +32,7 @@ function saveCanvasAsImage() {
 }
 
 function generateArt(img) {
+    const padding = Number(document.getElementById('padding').value);
     const maxSize = Number(document.getElementById('maxSize').value);
     const canvas = document.getElementById('outputCanvas');
     const ctx = canvas.getContext('2d');
@@ -42,8 +43,8 @@ function generateArt(img) {
 
     const newImg = resizeImage(img, maxSize);
     newImg.onload = () => {
-        canvas.width = newImg.width * xLength;
-        canvas.height = newImg.height * yLength;
+        canvas.width = (padding + newImg.width) * xLength + padding;
+        canvas.height = (padding + newImg.height) * yLength + padding;
 
 
         const [idxi8, pallette] = quantImg(newImg);
@@ -61,7 +62,7 @@ function generateArt(img) {
         for (let x = 0; x < xLength; x++) {
             for (let y = 0; y < yLength; y++) {
                 const colorChangedImgData = changeColor(imageData, ctx, colorList, newImg.width, newImg.height);
-                ctx.putImageData(colorChangedImgData, x * newImg.width, y * newImg.height);
+                ctx.putImageData(colorChangedImgData, (padding + newImg.width) * x, (padding + newImg.height) * y);
             }
         }
     }
