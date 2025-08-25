@@ -61,7 +61,12 @@ function generateArt(img) {
 
         for (let x = 0; x < xLength; x++) {
             for (let y = 0; y < yLength; y++) {
-                const colorChangedImgData = changeColor(imageData, ctx, colorList, newImg.width, newImg.height);
+                let colorChangedImgData;
+                if (x === 0 && y === 0) {
+                    colorChangedImgData = imageData;
+                } else {
+                    colorChangedImgData = changeColor(imageData, ctx, colorList, newImg.width, newImg.height);
+                }
                 ctx.putImageData(colorChangedImgData, (padding + newImg.width) * x, (padding + newImg.height) * y);
             }
         }
