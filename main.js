@@ -78,17 +78,35 @@ function changeColor(imgData, ctx, colorList, width, height) {
     
     const randomColorList = (function (arr) {
         const result = [];
-        for (let i = 0; i < arr.length; i++) {
-            const color = arr[i];
-            const randomColor = [
-                Math.floor(Math.random() * 256),
-                Math.floor(Math.random() * 256),
-                Math.floor(Math.random() * 256),
-                color[3]
-            ];
-            result.push(randomColor);
+        const colorSetting= document.querySelector('input[name="color"]:checked').value;
+        if (arr.length <= 5 && colorSetting === "palette") {
+            const colorList = colorHexList[Math.floor(Math.random() * colorHexList.length)];
+
+            for (let i = 0; i < 5; i++) {
+                const color = colorList[i];
+                const rgb = hexToRgb(color);
+                const randomColor = [
+                    Math.floor(rgb.r),
+                    Math.floor(rgb.g),
+                    Math.floor(rgb.b),
+                    color[3]
+                ];
+                result.push(randomColor);
+            }
+            return result;
+        } else {
+            for (let i = 0; i < arr.length; i++) {
+                const color = arr[i];
+                const randomColor = [
+                    Math.floor(Math.random() * 256),
+                    Math.floor(Math.random() * 256),
+                    Math.floor(Math.random() * 256),
+                    color[3]
+                ];
+                result.push(randomColor);
+            }
+            return result;
         }
-        return result;
     })(colorList);
 
     for (let i = 0; i < imgData.data.length; i += 4) {
@@ -108,6 +126,18 @@ function changeColor(imgData, ctx, colorList, width, height) {
     }
 
     return createImageData(colorChangedUint8Array, ctx, width, height);
+}
+
+function hexToRgb(hex) {
+    var bigint = parseInt(hex.substring(1), 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    return {
+        "r": r,
+        "g": g,
+        "b": b
+    };
 }
 
 function colorMatches(color1, color2) {
