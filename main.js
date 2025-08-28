@@ -59,13 +59,16 @@ function generateArt(img) {
             return result;
         }(pallette, 4));
 
+        const colorfulRatio = Number(document.getElementById('colorfulRatio').value)/100;
+
         for (let x = 0; x < xLength; x++) {
             for (let y = 0; y < yLength; y++) {
                 let colorChangedImgData;
-                if (x === 0 && y === 0) {
-                    colorChangedImgData = imageData;
-                } else {
+
+                if (Math.random() < colorfulRatio) {
                     colorChangedImgData = changeColor(imageData, ctx, colorList, newImg.width, newImg.height);
+                } else {
+                    colorChangedImgData = imageData;
                 }
                 ctx.putImageData(colorChangedImgData, (padding + newImg.width) * x, (padding + newImg.height) * y);
             }
